@@ -31,6 +31,7 @@ public class ElectricUsageCSVParser {
 	
 	private String usageDataURL;
 	private String dataCharset;
+	private Vector<String> buff;
 	
 	/**
 	 * コンストラクタ (キャラクタセット省略型)<br>
@@ -50,6 +51,7 @@ public class ElectricUsageCSVParser {
 	public ElectricUsageCSVParser (String URL, String charset) {
 		usageDataURL = URL;
 		dataCharset = charset;
+		buff = null;
 	}
 	
 	/**
@@ -79,6 +81,46 @@ public class ElectricUsageCSVParser {
 	}
 	
 	/**
+	 * ピーク時の予想最大電力（需要）を得る。
+	 * @return ピーク時の予想最大電力
+	 * @throws IOException 
+	 */
+	public PeakElectricity getPeakDemand () {
+		if (buff == null)
+			try {
+				buff = readFromURL();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		String baseData = buff.get(5); //上から6行目に明記されている
+		String[] baseDataArray = baseData.split(",");
+		PeakElectricity ret = new PeakElectricity(PeakElectricityType.DEMAND, baseDataArray[1], baseDataArray[0]);
+		return ret;
+	}
+	
+	/**
+	 * ピーク時の予想最大電力供給を得る。
+	 * @return ピーク時の最大電力供給
+	 * @throws IOException 
+	 */
+	public PeakElectricity getPeakSupply () {
+		if (buff == null)
+			try {
+				buff = readFromURL();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		String baseData = buff.get(2); //上から3行目に明記されている
+		String[] baseDataArray = baseData.split(",");
+		PeakElectricity ret = new PeakElectricity(PeakElectricityType.SUPPLY, baseDataArray[1], baseDataArray[0]);
+		return ret;
+	}
+	
+	/**
 	 * 読み込んだソーステキストをそのまま返します。
 	 * @return 読み込んだテキストファイルのテキスト
 	 */
@@ -100,6 +142,8 @@ public class ElectricUsageCSVParser {
 	public static void main (String[] args) {
 		ElectricUsageCSVParser p = new ElectricUsageCSVParser(UsageDataURL_Tohoku);
 		System.out.println(p.getReadText());
+		System.out.println(p.getPeakDemand().toString());
+		System.out.println(p.getPeakSupply().toString());
 	}
 	
 }
