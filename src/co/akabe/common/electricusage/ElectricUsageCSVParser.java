@@ -54,7 +54,6 @@ public class ElectricUsageCSVParser {
 	
 	/**
 	 * URLからテキストを読み込む
-	 * @param strurl URL
 	 * @return URL上にあるテキスト。エラー発生時はnull
 	 * @throws IOException 通信エラーまたは入力ストリームでエラーが発生した場合にスローします
 	 * @since 1.0
