@@ -35,7 +35,7 @@ public class ElectricUsageCSVParser {
 	
 	/**
 	 * コンストラクタ (キャラクタセット省略型)<br>
-	 * データのCharsetはShift_JISであるとみなされます。
+	 * データのCharsetはShift_JISであるとみなします。
 	 * @param URL ソースURL ({@link #UsageDataURL_Tokyo}, {@link #UsageDataURL_Tohoku}の利用を推奨)
 	 */
 	public ElectricUsageCSVParser (String URL) {
@@ -144,6 +144,10 @@ public class ElectricUsageCSVParser {
 		System.out.println(p.getReadText());
 		System.out.println(p.getPeakDemand().toString());
 		System.out.println(p.getPeakSupply().toString());
+		
+		ElectricUsageCSVParser pt = new ElectricUsageCSVParser(UsageDataURL_Tokyo);
+		System.out.println(pt.getPeakDemand().toString());
+		System.out.println(pt.getPeakSupply().toString());
 	}
 	
 }

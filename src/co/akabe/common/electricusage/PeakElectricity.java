@@ -1,5 +1,8 @@
 package co.akabe.common.electricusage;
 
+/**
+ * ピーク時の電力 (需要または供給) を表すクラス
+ */
 public class PeakElectricity {
 
 	private PeakElectricityType type;
