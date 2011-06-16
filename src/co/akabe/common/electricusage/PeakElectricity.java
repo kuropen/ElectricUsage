@@ -3,10 +3,9 @@ package co.akabe.common.electricusage;
 /**
  * ピーク時の電力 (需要または供給) を表すクラス
  */
-public class PeakElectricity {
+public class PeakElectricity extends ElecCSVHandler {
 
 	private PeakElectricityType type;
-	private String time;
 	private int peakAmount;
 	
 	/**
@@ -50,7 +49,7 @@ public class PeakElectricity {
 	@Override
 	public String toString() {
 		String ret = "最大電力"+(type == PeakElectricityType.DEMAND ? "需要" : "供給")+"は"+
-		time+"ごろにおいて"+peakAmount+"万kWです。";
+		this.getHour()+"時台において"+peakAmount+"万kWです。";
 		return ret;
 	}
 	

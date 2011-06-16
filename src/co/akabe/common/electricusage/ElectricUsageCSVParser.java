@@ -103,7 +103,6 @@ public class ElectricUsageCSVParser {
 	/**
 	 * ピーク時の予想最大電力供給を得る。
 	 * @return ピーク時の最大電力供給
-	 * @throws IOException 
 	 */
 	public PeakElectricity getPeakSupply () {
 		if (buff == null)
@@ -117,6 +116,30 @@ public class ElectricUsageCSVParser {
 		String baseData = buff.get(2); //上から3行目に明記されている
 		String[] baseDataArray = baseData.split(",");
 		PeakElectricity ret = new PeakElectricity(PeakElectricityType.SUPPLY, baseDataArray[1], baseDataArray[0]);
+		return ret;
+	}
+	
+	/**
+	 * 時間ごとの需要実績データを得る。
+	 * @return 時間ごとの需要実績
+	 */
+	public Vector<HourlyDemand> getHourlyDemand () {
+		Vector<HourlyDemand> ret = new Vector<HourlyDemand>();
+		if (buff == null)
+			try {
+				buff = readFromURL();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		for (int i = 8; i < buff.size(); i++) { //8行目以降を見る
+			String basedata = buff.get(i);
+			String[] baseDataArray = basedata.split(",");
+			HourlyDemand hd = new HourlyDemand(baseDataArray[0], baseDataArray[1], 
+					baseDataArray[2], baseDataArray[3]);
+			ret.add(hd);
+		}
 		return ret;
 	}
 	
@@ -141,13 +164,20 @@ public class ElectricUsageCSVParser {
 	
 	public static void main (String[] args) {
 		ElectricUsageCSVParser p = new ElectricUsageCSVParser(UsageDataURL_Tohoku);
-		System.out.println(p.getReadText());
+		//System.out.println(p.getReadText());
+		System.out.println("東北電力管内");
 		System.out.println(p.getPeakDemand().toString());
-		System.out.println(p.getPeakSupply().toString());
+		PeakElectricity pe = p.getPeakSupply();
+		System.out.println(pe.toString());
+		System.out.println(HourlyDemand.seekNearestHistory(p.getHourlyDemand()).toStringWithDiffandPercentage(pe));
 		
+		System.out.println("\n東京電力管内");	
 		ElectricUsageCSVParser pt = new ElectricUsageCSVParser(UsageDataURL_Tokyo);
+		//System.out.println(pt.getReadText());
 		System.out.println(pt.getPeakDemand().toString());
-		System.out.println(pt.getPeakSupply().toString());
+		PeakElectricity pet = pt.getPeakSupply();
+		System.out.println(pet.toString());
+		System.out.println(HourlyDemand.seekNearestHistory(pt.getHourlyDemand()).toStringWithDiffandPercentage(pet));
 	}
 	
 }
