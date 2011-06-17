@@ -91,7 +91,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	
 	@Override
 	public String toString() {
-		return this.getHour() + "時台の需要実績は" + td + "kWでした。";
+		return this.getHour() + "時台の需要実績は" + td + "万kWでした。";
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 */
 	private String appendDiff () {
 		int d = this.getDifference();
-		return "(前日比 " + ((d > 0) ? "+" : "") + d + " kW)";
+		return "(前日比 " + ((d > 0) ? "+" : "") + d + " 万kW)";
 	}
 	
 	/**
