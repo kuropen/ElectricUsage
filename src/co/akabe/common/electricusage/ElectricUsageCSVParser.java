@@ -29,9 +29,27 @@ public class ElectricUsageCSVParser {
 	public static final String UsageDataURL_Tohoku = 
 		"http://setsuden.tohoku-epco.co.jp/common/demand/juyo_tohoku.csv";
 	
+	public static final SupplyDataFormat Format_Tohoku =
+		new SupplyDataFormat("http://setsuden.tohoku-epco.co.jp/common/demand/juyo_tohoku.csv", 5, 2, 8);
+	
+	
+	public static final SupplyDataFormat Format_Tokyo = 
+		new SupplyDataFormat("http://www.tepco.co.jp/forecast/html/images/juyo-j.csv", 5, 2, 8, true);
+	
+	public static final SupplyDataFormat Format_Kansai = 
+		new SupplyDataFormat("http://www.kepco.co.jp/yamasou/juyo_kansai.csv", 5, 2, 11);
+	
+	private SupplyDataFormat df;	
+	@Deprecated
 	private String usageDataURL;
+	@Deprecated
 	private String dataCharset;
 	private Vector<String> buff;
+	
+	
+	public ElectricUsageCSVParser (SupplyDataFormat f) {
+		df = f;
+	}
 	
 	/**
 	 * コンストラクタ (キャラクタセット省略型)<br>
@@ -39,7 +57,9 @@ public class ElectricUsageCSVParser {
 	 * @param URL ソースURL ({@link #UsageDataURL_Tokyo}, {@link #UsageDataURL_Tohoku}の利用を推奨)
 	 */
 	public ElectricUsageCSVParser (String URL) {
-		this(URL, "Shift_JIS");
+		//this(URL, "Shift_JIS");
+		df = new SupplyDataFormat (URL, 2, 5, 8);
+		buff = null;
 	}
 	
 	/**
@@ -49,8 +69,8 @@ public class ElectricUsageCSVParser {
 	 * @param charset 文字コード
 	 */
 	public ElectricUsageCSVParser (String URL, String charset) {
-		usageDataURL = URL;
-		dataCharset = charset;
+		//usageDataURL = URL;
+		df = new SupplyDataFormat (URL, 2, 5, 8, charset);
 		buff = null;
 	}
 	
@@ -61,14 +81,14 @@ public class ElectricUsageCSVParser {
 	 * @since 1.0
 	 */
 	private Vector<String> readFromURL() throws IOException{
-		URL url = new URL(usageDataURL);
+		URL url = new URL(df.dataURL);
 		URLConnection connection = url.openConnection();
 		connection.setDoInput(true);
 		InputStream inStream = connection.getInputStream();
 		
 		try {
 			BufferedReader input =
-					new BufferedReader(new InputStreamReader(inStream, dataCharset));
+					new BufferedReader(new InputStreamReader(inStream, df.charset));
 			
 			String line = "";
 			Vector<String> ret = new Vector<String>();
@@ -94,7 +114,7 @@ public class ElectricUsageCSVParser {
 				e.printStackTrace();
 				return null;
 			}
-		String baseData = buff.get(5); //上から6行目に明記されている
+		String baseData = buff.get(df.peakDemand_Line);
 		String[] baseDataArray = baseData.split(",");
 		PeakElectricity ret = new PeakElectricity(PeakElectricityType.DEMAND, baseDataArray[1], baseDataArray[0]);
 		return ret;
@@ -113,7 +133,7 @@ public class ElectricUsageCSVParser {
 				e.printStackTrace();
 				return null;
 			}
-		String baseData = buff.get(2); //上から3行目に明記されている
+		String baseData = buff.get(df.peakSupply_Line); //上から3行目に明記されている
 		String[] baseDataArray = baseData.split(",");
 		PeakElectricity ret = new PeakElectricity(PeakElectricityType.SUPPLY, baseDataArray[1], baseDataArray[0]);
 		return ret;
@@ -133,11 +153,14 @@ public class ElectricUsageCSVParser {
 				e.printStackTrace();
 				return null;
 			}
-		for (int i = 8; i < buff.size(); i++) { //8行目以降を見る
+		final int startLine = df.hourlyDemand_Line;
+		for (int i = startLine; i < startLine + 24; i++) {
 			String basedata = buff.get(i);
 			String[] baseDataArray = basedata.split(",");
+			String diffStr = baseDataArray[3];
+			if (df.isHDFinalFieldPrediction) diffStr = "-1048576"; //最終フィールドが予測(東電)ならば前日比を表示させないため-1048576を送る
 			HourlyDemand hd = new HourlyDemand(baseDataArray[0], baseDataArray[1], 
-					baseDataArray[2], baseDataArray[3]);
+					baseDataArray[2], diffStr);
 			ret.add(hd);
 		}
 		return ret;
@@ -163,7 +186,7 @@ public class ElectricUsageCSVParser {
 	}
 	
 	public static void main (String[] args) {
-		ElectricUsageCSVParser p = new ElectricUsageCSVParser(UsageDataURL_Tohoku);
+		ElectricUsageCSVParser p = new ElectricUsageCSVParser(Format_Tohoku);
 		//System.out.println(p.getReadText());
 		System.out.println("東北電力管内");
 		System.out.println(p.getPeakDemand().toString());
@@ -172,7 +195,7 @@ public class ElectricUsageCSVParser {
 		System.out.println(HourlyDemand.seekNearestHistory(p.getHourlyDemand()).toStringWithDiffandPercentage(pe));
 		
 		System.out.println("\n東京電力管内");	
-		ElectricUsageCSVParser pt = new ElectricUsageCSVParser(UsageDataURL_Tokyo);
+		ElectricUsageCSVParser pt = new ElectricUsageCSVParser(Format_Tokyo);
 		//System.out.println(pt.getReadText());
 		System.out.println(pt.getPeakDemand().toString());
 		PeakElectricity pet = pt.getPeakSupply();

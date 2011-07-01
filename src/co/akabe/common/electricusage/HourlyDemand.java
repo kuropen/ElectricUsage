@@ -86,6 +86,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * @return 前日との実績差
 	 */
 	public int getDifference () {
+		if (yd == -1048576) return 0;
 		return td - yd;
 	}
 	
@@ -123,6 +124,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * @return 前日差を表す文字列
 	 */
 	private String appendDiff () {
+		if (yd == -1048576) return "";
 		int d = this.getDifference();
 		return "(前日比 " + ((d > 0) ? "+" : "") + d + " 万kW)";
 	}
@@ -140,7 +142,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * @param v 時間帯ごとのデータのセット
 	 * @return 最新需要データ
 	 */
-	public static HourlyDemand seekNearestHistory (Vector<HourlyDemand> v) {
+	public static HourlyDemand seekNearestHistory (Vector<? extends HourlyDemand> v) {
 		for (int i = (v.size() - 1); i >= 0; i--) { //後ろから探索
 			HourlyDemand tmp = v.get(i);
 			if (tmp.getDemandToday() > 0) return tmp; //0でないデータが発見されたら得られる最新データ
