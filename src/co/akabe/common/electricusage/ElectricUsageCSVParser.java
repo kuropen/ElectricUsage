@@ -19,31 +19,37 @@ public class ElectricUsageCSVParser {
 
 	/**
 	 * 東京電力管内のデータURL
+	 * @deprecated Use {@link #Format_Tokyo} instead. NOW THIS VARIABLE DOES NOT WORK WELL.
 	 */
 	public static final String UsageDataURL_Tokyo =
 		"http://www.tepco.co.jp/forecast/html/images/juyo-j.csv";
 	
 	/**
 	 * 東北電力管内のデータURL
+	 * @deprecated Use {@link #Format_Tohoku} instead
 	 */
 	public static final String UsageDataURL_Tohoku = 
 		"http://setsuden.tohoku-epco.co.jp/common/demand/juyo_tohoku.csv";
 	
+	/**
+	 * 東北電力のデータフォーマット定義
+	 */
 	public static final SupplyDataFormat Format_Tohoku =
 		new SupplyDataFormat("http://setsuden.tohoku-epco.co.jp/common/demand/juyo_tohoku.csv", 5, 2, 8);
 	
-	
+	/**
+	 * 東京電力のデータフォーマット定義
+	 */
 	public static final SupplyDataFormat Format_Tokyo = 
 		new SupplyDataFormat("http://www.tepco.co.jp/forecast/html/images/juyo-j.csv", 5, 2, 8, true);
 	
+	/**
+	 * 関西電力のデータフォーマット定義
+	 */
 	public static final SupplyDataFormat Format_Kansai = 
 		new SupplyDataFormat("http://www.kepco.co.jp/yamasou/juyo_kansai.csv", 5, 2, 11);
 	
 	private SupplyDataFormat df;	
-	@Deprecated
-	private String usageDataURL;
-	@Deprecated
-	private String dataCharset;
 	private Vector<String> buff;
 	
 	
@@ -201,6 +207,14 @@ public class ElectricUsageCSVParser {
 		PeakElectricity pet = pt.getPeakSupply();
 		System.out.println(pet.toString());
 		System.out.println(HourlyDemand.seekNearestHistory(pt.getHourlyDemand()).toStringWithDiffandPercentage(pet));
+		
+		System.out.println("\n関西電力管内");	
+		ElectricUsageCSVParser pk = new ElectricUsageCSVParser(Format_Kansai);
+		//System.out.println(pt.getReadText());
+		System.out.println(pk.getPeakDemand().toString());
+		PeakElectricity pek = pk.getPeakSupply();
+		System.out.println(pek.toString());
+		System.out.println(HourlyDemand.seekNearestHistory(pk.getHourlyDemand()).toStringWithDiffandPercentage(pek));
 	}
 	
 }
