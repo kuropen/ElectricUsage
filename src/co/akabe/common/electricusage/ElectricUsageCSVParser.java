@@ -35,13 +35,13 @@ public class ElectricUsageCSVParser {
 	 * 東北電力のデータフォーマット定義
 	 */
 	public static final SupplyDataFormat Format_Tohoku =
-		new SupplyDataFormat("http://setsuden.tohoku-epco.co.jp/common/demand/juyo_tohoku.csv", 5, 2, 8);
+		new SupplyDataFormat("http://setsuden.tohoku-epco.co.jp/common/demand/juyo_tohoku.csv", 5, 2, 8, 44);
 	
 	/**
 	 * 東京電力のデータフォーマット定義
 	 */
 	public static final SupplyDataFormat Format_Tokyo = 
-		new SupplyDataFormat("http://www.tepco.co.jp/forecast/html/images/juyo-j.csv", 5, 2, 8, true);
+		new SupplyDataFormat("http://www.tepco.co.jp/forecast/html/images/juyo-j.csv", 5, 2, 8, 44);
 	
 	/**
 	 * 関西電力のデータフォーマット定義
@@ -164,13 +164,46 @@ public class ElectricUsageCSVParser {
 			String basedata = buff.get(i);
 			String[] baseDataArray = basedata.split(",");
 			String diffStr = baseDataArray[3];
-			if (df.isHDFinalFieldPrediction) diffStr = "-1048576"; //最終フィールドが予測(東電)ならば前日比を表示させないため-1048576を送る
+			if (df.isNewFormat) diffStr = "-1048576"; //最終フィールドが予測(東電)ならば前日比を表示させないため-1048576を送る
 			HourlyDemand hd = new HourlyDemand(baseDataArray[0], baseDataArray[1], 
 					baseDataArray[2], diffStr);
 			ret.add(hd);
 		}
 		return ret;
 	}
+	
+	/**
+	 * 5分ごとの需要実績データを得る。
+	 * @return 時間ごとの需要実績
+	 */
+	public Vector<HourlyDemand> get5MinDemand () {
+		if (!df.isNewFormat) return null;
+		Vector<HourlyDemand> ret = new Vector<HourlyDemand>();
+		if (buff == null)
+			try {
+				buff = readFromURL();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		final int startLine = df.fiveMinDemand_Line;
+		for (int i = startLine; i < startLine + 287; i++) {
+			String basedata = buff.get(i);
+			String[] baseDataArray = basedata.split(",");
+			String diffStr = "-1048576"; //最終フィールドが予測(東電)ならば前日比を表示させないため-1048576を送る
+			String demandStr;
+			if (baseDataArray.length == 3)
+				demandStr = baseDataArray[2];
+			else
+				demandStr = "0";
+			HourlyDemand hd = new HourlyDemand(baseDataArray[0], baseDataArray[1], 
+					demandStr, diffStr, true);
+			ret.add(hd);
+		}
+		return ret;
+	}
+	
 	
 	/**
 	 * 読み込んだソーステキストをそのまま返します。
@@ -198,7 +231,7 @@ public class ElectricUsageCSVParser {
 		System.out.println(p.getPeakDemand().toString());
 		PeakElectricity pe = p.getPeakSupply();
 		System.out.println(pe.toString());
-		System.out.println(HourlyDemand.seekNearestHistory(p.getHourlyDemand()).toStringWithDiffandPercentage(pe));
+		System.out.println(HourlyDemand.seekNearestHistory(p.get5MinDemand()).toStringWithDiffandPercentage(pe));
 		
 		System.out.println("\n東京電力管内");	
 		ElectricUsageCSVParser pt = new ElectricUsageCSVParser(Format_Tokyo);
@@ -206,7 +239,7 @@ public class ElectricUsageCSVParser {
 		System.out.println(pt.getPeakDemand().toString());
 		PeakElectricity pet = pt.getPeakSupply();
 		System.out.println(pet.toString());
-		System.out.println(HourlyDemand.seekNearestHistory(pt.getHourlyDemand()).toStringWithDiffandPercentage(pet));
+		System.out.println(HourlyDemand.seekNearestHistory(pt.get5MinDemand()).toStringWithDiffandPercentage(pet));
 		
 		System.out.println("\n関西電力管内");	
 		ElectricUsageCSVParser pk = new ElectricUsageCSVParser(Format_Kansai);

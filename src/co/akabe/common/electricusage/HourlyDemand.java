@@ -15,6 +15,11 @@ public class HourlyDemand extends ElecCSVHandler {
 	private int yd;
 	
 	/**
+	 * 5分ごと需要か？
+	 */
+	private boolean is5Min;
+	
+	/**
 	 * コンストラクタ
 	 * @param d 日付
 	 * @param t 時刻
@@ -26,6 +31,22 @@ public class HourlyDemand extends ElecCSVHandler {
 		time = t;
 		td = Integer.parseInt(dm);
 		yd = Integer.parseInt(y);
+		is5Min = false;
+	}
+	
+	/**
+	 * コンストラクタ
+	 * @param d 日付
+	 * @param t 時刻
+	 * @param dm 当日実績
+	 * @param five 5分需要フラグ
+	 */
+	public HourlyDemand (String d, String t, String dm, String y, boolean five) {
+		dt = d;
+		time = t;
+		td = Integer.parseInt(dm);
+		yd = Integer.parseInt(y);
+		is5Min = five;
 	}
 	
 	/**
@@ -92,7 +113,10 @@ public class HourlyDemand extends ElecCSVHandler {
 	
 	@Override
 	public String toString() {
-		return this.getHour() + "時台の需要実績は" + td + "万kWでした。";
+		if (!is5Min)
+			return this.getHour() + "時台の需要実績は" + td + "万kWでした。";
+		else
+			return this.getTime() + "の需要実績は" + td + "万kWでした。";
 	}
 	
 	/**
@@ -143,6 +167,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * @return 最新需要データ
 	 */
 	public static HourlyDemand seekNearestHistory (Vector<? extends HourlyDemand> v) {
+		if (v == null) return null;
 		for (int i = (v.size() - 1); i >= 0; i--) { //後ろから探索
 			HourlyDemand tmp = v.get(i);
 			if (tmp.getDemandToday() > 0) return tmp; //0でないデータが発見されたら得られる最新データ

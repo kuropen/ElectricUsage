@@ -31,9 +31,14 @@ public class SupplyDataFormat {
 	public final int hourlyDemand_Line;
 	
 	/**
+	 * 5分ごと要の開始行数
+	 */
+	public final int fiveMinDemand_Line;
+	
+	/**
 	 * 時間別需要の第4フィールドが予測である (東電のみtrue)
 	 */
-	public final boolean isHDFinalFieldPrediction;
+	public final boolean isNewFormat;
 	
 	/**
 	 * データフォーマット変数の初期化
@@ -48,7 +53,8 @@ public class SupplyDataFormat {
 		peakSupply_Line = psl;
 		hourlyDemand_Line = hdl;
 		charset = "Shift_JIS";
-		isHDFinalFieldPrediction = false;
+		isNewFormat = false;
+		fiveMinDemand_Line = 0;
 	}
 	
 	/**
@@ -57,15 +63,16 @@ public class SupplyDataFormat {
 	 * @param pdl ピーク需要行
 	 * @param psl ピーク供給行
 	 * @param hdl 時間別需要行
-	 * @param ffp 時間別需要の最終フィールドが予測か？
+	 * @param fivemin 5分ごと需要行
 	 */
-	public SupplyDataFormat (final String url, final int pdl, final int psl, final int hdl, final boolean ffp) {
+	public SupplyDataFormat (final String url, final int pdl, final int psl, final int hdl, final int fivemin) {
 		dataURL = url;
 		peakDemand_Line = pdl;
 		peakSupply_Line = psl;
 		hourlyDemand_Line = hdl;
 		charset = "Shift_JIS";
-		isHDFinalFieldPrediction = ffp;
+		fiveMinDemand_Line = fivemin;
+		isNewFormat = true;
 	}
 	
 	/**
@@ -82,7 +89,8 @@ public class SupplyDataFormat {
 		peakSupply_Line = psl;
 		hourlyDemand_Line = hdl;
 		charset = cs;
-		isHDFinalFieldPrediction = false;
+		isNewFormat = false;
+		fiveMinDemand_Line = 0;
 	}
-	
+		
 }
