@@ -57,11 +57,11 @@ public class ElectricUsageCSVParser {
 	public static final SupplyDataFormat Format_Chubu = 
 		new SupplyDataFormat("http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_cepco.csv", 5, 2, 8);
 	
-//	/**
-//	 * 九州電力のデータフォーマット定義
-//	 */
-//	public static final SupplyDataFormat Format_Kyushu = 
-//		new SupplyDataFormat("http://www.kyuden.co.jp/power_usages/csv/electric_power_usage"+new SimpleDateFormat("yyyyMMdd").format(new Date())+".csv", 5, 2, 0, 8);
+	/**
+	 * 九州電力のデータフォーマット定義
+	 */
+	public static final SupplyDataFormat Format_Kyushu = 
+		new SupplyDataFormat("http://www.kyuden.co.jp/power_usages/csv/electric_power_usage"+new SimpleDateFormat("yyyyMMdd").format(new Date())+".csv", 5, 2, 0, 8);
 	
 	private SupplyDataFormat df;	
 	private Vector<String> buff;
@@ -166,7 +166,6 @@ public class ElectricUsageCSVParser {
 	public Vector<HourlyDemand> getHourlyDemand () {
 		//九州電力に対する特例：九電は5分ごとのデータしか公開していない
 		if (df.hourlyDemand_Line == 0) {
-			System.err.println("九州電力は1時間ごとの統計を公開していない。5分ごとを返します。");
 			return this.get5MinDemand();
 		}
 		
@@ -198,7 +197,6 @@ public class ElectricUsageCSVParser {
 	 */
 	public Vector<HourlyDemand> get5MinDemand () {
 		if (!df.isNewFormat) {
-			System.err.println("旧フォーマットなので5分データは取得できません。");
 			return null;
 		}
 		Vector<HourlyDemand> ret = new Vector<HourlyDemand>();
@@ -220,7 +218,7 @@ public class ElectricUsageCSVParser {
 			else
 				diffStr = baseDataArray[3]; //九州電力に対する特例：5分ごとの予測でも前日比を表示できる
 			String demandStr;
-			if (baseDataArray.length == 3)
+			if (baseDataArray.length >= 3)
 				demandStr = baseDataArray[2];
 			else
 				demandStr = "0";
@@ -284,13 +282,13 @@ public class ElectricUsageCSVParser {
 		System.out.println(pec.toString());
 		System.out.println(HourlyDemand.seekNearestHistory(pc.getHourlyDemand()).toStringWithDiffandPercentage(pec));
 		
-//		System.out.println("\n九州電力管内");	
-//		ElectricUsageCSVParser ps = new ElectricUsageCSVParser(Format_Kyushu);
-//		//System.out.println(pt.getReadText());
-//		System.out.println(ps.getPeakDemand().toString());
-//		PeakElectricity pes = ps.getPeakSupply();
-//		System.out.println(pes.toString());
-//		System.out.println(HourlyDemand.seekNearestHistory(ps.get5MinDemand()).toStringWithDiffandPercentage(pes));
+		System.out.println("\n九州電力管内");	
+		ElectricUsageCSVParser ps = new ElectricUsageCSVParser(Format_Kyushu);
+		//System.out.println(pt.getReadText());
+		System.out.println(ps.getPeakDemand().toString());
+		PeakElectricity pes = ps.getPeakSupply();
+		System.out.println(pes.toString());
+		System.out.println(HourlyDemand.seekNearestHistory(ps.getHourlyDemand()).toStringWithDiffandPercentage(pes));
 	}
 	
 }
