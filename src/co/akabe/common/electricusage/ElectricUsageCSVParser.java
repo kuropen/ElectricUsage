@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 /**
@@ -49,8 +51,17 @@ public class ElectricUsageCSVParser {
 	public static final SupplyDataFormat Format_Kansai = 
 		new SupplyDataFormat("http://www.kepco.co.jp/yamasou/juyo_kansai.csv", 5, 2, 11);
 	
+	/**
+	 * 中部電力のデータフォーマット定義
+	 */
 	public static final SupplyDataFormat Format_Chubu = 
 		new SupplyDataFormat("http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_cepco.csv", 5, 2, 8);
+	
+//	/**
+//	 * 九州電力のデータフォーマット定義
+//	 */
+//	public static final SupplyDataFormat Format_Kyushu = 
+//		new SupplyDataFormat("http://www.kyuden.co.jp/power_usages/csv/electric_power_usage"+new SimpleDateFormat("yyyyMMdd").format(new Date())+".csv", 5, 2, 0, 8);
 	
 	private SupplyDataFormat df;	
 	private Vector<String> buff;
@@ -153,6 +164,12 @@ public class ElectricUsageCSVParser {
 	 * @return 時間ごとの需要実績
 	 */
 	public Vector<HourlyDemand> getHourlyDemand () {
+		//九州電力に対する特例：九電は5分ごとのデータしか公開していない
+		if (df.hourlyDemand_Line == 0) {
+			System.err.println("九州電力は1時間ごとの統計を公開していない。5分ごとを返します。");
+			return this.get5MinDemand();
+		}
+		
 		Vector<HourlyDemand> ret = new Vector<HourlyDemand>();
 		if (buff == null)
 			try {
@@ -180,7 +197,10 @@ public class ElectricUsageCSVParser {
 	 * @return 時間ごとの需要実績
 	 */
 	public Vector<HourlyDemand> get5MinDemand () {
-		if (!df.isNewFormat) return null;
+		if (!df.isNewFormat) {
+			System.err.println("旧フォーマットなので5分データは取得できません。");
+			return null;
+		}
 		Vector<HourlyDemand> ret = new Vector<HourlyDemand>();
 		if (buff == null)
 			try {
@@ -194,7 +214,11 @@ public class ElectricUsageCSVParser {
 		for (int i = startLine; i < startLine + 287; i++) {
 			String basedata = buff.get(i);
 			String[] baseDataArray = basedata.split(",");
-			String diffStr = "-1048576"; //最終フィールドが予測(東電)ならば前日比を表示させないため-1048576を送る
+			String diffStr;
+			if (df.hourlyDemand_Line != 0)
+				diffStr = "-1048576"; //最終フィールドが予測(東電)ならば前日比を表示させないため-1048576を送る
+			else
+				diffStr = baseDataArray[3]; //九州電力に対する特例：5分ごとの予測でも前日比を表示できる
 			String demandStr;
 			if (baseDataArray.length == 3)
 				demandStr = baseDataArray[2];
@@ -259,6 +283,14 @@ public class ElectricUsageCSVParser {
 		PeakElectricity pec = pc.getPeakSupply();
 		System.out.println(pec.toString());
 		System.out.println(HourlyDemand.seekNearestHistory(pc.getHourlyDemand()).toStringWithDiffandPercentage(pec));
+		
+//		System.out.println("\n九州電力管内");	
+//		ElectricUsageCSVParser ps = new ElectricUsageCSVParser(Format_Kyushu);
+//		//System.out.println(pt.getReadText());
+//		System.out.println(ps.getPeakDemand().toString());
+//		PeakElectricity pes = ps.getPeakSupply();
+//		System.out.println(pes.toString());
+//		System.out.println(HourlyDemand.seekNearestHistory(ps.get5MinDemand()).toStringWithDiffandPercentage(pes));
 	}
 	
 }

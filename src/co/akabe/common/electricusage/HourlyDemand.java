@@ -167,7 +167,10 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * @return 最新需要データ
 	 */
 	public static HourlyDemand seekNearestHistory (Vector<? extends HourlyDemand> v) {
-		if (v == null) return null;
+		if (v == null) {
+			System.err.println("与えられたデータがnull");
+			return null;
+		}
 		for (int i = (v.size() - 1); i >= 0; i--) { //後ろから探索
 			HourlyDemand tmp = v.get(i);
 			if (tmp.getDemandToday() > 0) return tmp; //0でないデータが発見されたら得られる最新データ
