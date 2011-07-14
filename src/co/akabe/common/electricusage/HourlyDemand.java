@@ -168,7 +168,6 @@ public class HourlyDemand extends ElecCSVHandler {
 	 */
 	public static HourlyDemand seekNearestHistory (Vector<? extends HourlyDemand> v) {
 		if (v == null) {
-			System.err.println("与えられたデータがnull");
 			return null;
 		}
 		for (int i = (v.size() - 1); i >= 0; i--) { //後ろから探索
