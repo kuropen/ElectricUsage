@@ -49,6 +49,9 @@ public class ElectricUsageCSVParser {
 	public static final SupplyDataFormat Format_Kansai = 
 		new SupplyDataFormat("http://www.kepco.co.jp/yamasou/juyo_kansai.csv", 5, 2, 11);
 	
+	public static final SupplyDataFormat Format_Chubu = 
+		new SupplyDataFormat("http://denki-yoho.chuden.jp/denki_yoho_content_data/juyo_cepco.csv", 5, 2, 8);
+	
 	private SupplyDataFormat df;	
 	private Vector<String> buff;
 	
@@ -248,6 +251,14 @@ public class ElectricUsageCSVParser {
 		PeakElectricity pek = pk.getPeakSupply();
 		System.out.println(pek.toString());
 		System.out.println(HourlyDemand.seekNearestHistory(pk.getHourlyDemand()).toStringWithDiffandPercentage(pek));
+		
+		System.out.println("\n中部電力管内");	
+		ElectricUsageCSVParser pc = new ElectricUsageCSVParser(Format_Chubu);
+		//System.out.println(pt.getReadText());
+		System.out.println(pc.getPeakDemand().toString());
+		PeakElectricity pec = pc.getPeakSupply();
+		System.out.println(pec.toString());
+		System.out.println(HourlyDemand.seekNearestHistory(pc.getHourlyDemand()).toStringWithDiffandPercentage(pec));
 	}
 	
 }
