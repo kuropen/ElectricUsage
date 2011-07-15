@@ -16,7 +16,9 @@ public class HourlyDemand extends ElecCSVHandler {
 	
 	/**
 	 * 5分ごと需要か？
+	 * @Deprecated {@link FiveMinDemand} に置き換え。
 	 */
+	@Deprecated
 	private boolean is5Min;
 	
 	/**
@@ -40,6 +42,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * @param t 時刻
 	 * @param dm 当日実績
 	 * @param five 5分需要フラグ
+	 * @Deprecated Use {@link FiveMinDemand} class.
 	 */
 	public HourlyDemand (String d, String t, String dm, String y, boolean five) {
 		dt = d;
@@ -66,16 +69,6 @@ public class HourlyDemand extends ElecCSVHandler {
 	}
 	
 	/**
-	 * 時刻から「:00」を取り、数字だけを返す。
-	 * @return 日付データの時刻(n時台)
-	 */
-	public int getHour () {
-		String[] arr = time.split(":");
-		int ret = Integer.parseInt(arr[0]);
-		return ret;
-	}
-	
-	/**
 	 * 当日実績を返す。
 	 * @return 当日実績
 	 */
@@ -93,11 +86,11 @@ public class HourlyDemand extends ElecCSVHandler {
 	
 	/**
 	 * ピーク供給に対する使用率を返す。
-	 * @param pe 使用率の算定基準となるピーク供給 (需要を入れても通じますが意味がないです)
+	 * @param pe 使用率の算定基準となるピーク供給
 	 * @return 使用率 (パーセント単位)
 	 */
-	public float getUsePercentage (PeakElectricity pe) {
-		int peakSupply = pe.getPeakAmount();
+	public float getUsePercentage (PeakSupply s) {
+		int peakSupply = s.getAmount();
 		float ret = (float)td / peakSupply * 100;
 		return ret;
 	}
@@ -113,10 +106,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	
 	@Override
 	public String toString() {
-		if (!is5Min)
-			return this.getHour() + "時台の需要実績は" + td + "万kWでした。";
-		else
-			return this.getTime() + "の需要実績は" + td + "万kWでした。";
+		return this.getHour() + "時台の需要実績は" + td + "万kWでした。";
 	}
 	
 	/**
@@ -131,7 +121,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * 使用率を付け加えたtoString
 	 * @return メッセージ文字列 + 使用率
 	 */
-	public String toStringWithPercentage(PeakElectricity pe) {
+	public String toStringWithPercentage(PeakSupply pe) {
 		return this.toString() + this.appendPercentage(pe);
 	}
 	
@@ -139,7 +129,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * 前日差・使用率を付け加えたtoString
 	 * @return メッセージ文字列 + 前日差 + 使用率
 	 */
-	public String toStringWithDiffandPercentage(PeakElectricity pe) {
+	public String toStringWithDiffandPercentage(PeakSupply pe) {
 		return this.toString() + this.appendDiff() + this.appendPercentage(pe);
 	}
 	
@@ -147,7 +137,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * toStringにおける前日差増分
 	 * @return 前日差を表す文字列
 	 */
-	private String appendDiff () {
+	protected String appendDiff () {
 		if (yd == -1048576) return "";
 		int d = this.getDifference();
 		return "(前日比 " + ((d > 0) ? "+" : "") + d + " 万kW)";
@@ -157,7 +147,7 @@ public class HourlyDemand extends ElecCSVHandler {
 	 * toStringにおけるパーセント増分
 	 * @return 電力使用率を表す文字列
 	 */
-	private String appendPercentage (PeakElectricity pe) {
+	protected String appendPercentage (PeakSupply pe) {
 		return "(ピーク供給力に対する使用率は " + String.format("%.2f", this.getUsePercentage(pe)) + "%)";
 	}
 	

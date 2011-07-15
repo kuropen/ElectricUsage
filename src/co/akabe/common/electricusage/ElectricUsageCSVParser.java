@@ -125,7 +125,7 @@ public class ElectricUsageCSVParser {
 	 * @return ピーク時の予想最大電力
 	 * @throws IOException 
 	 */
-	public PeakElectricity getPeakDemand () {
+	public PeakDemand getPeakDemand () {
 		if (buff == null)
 			try {
 				buff = readFromURL();
@@ -136,7 +136,7 @@ public class ElectricUsageCSVParser {
 			}
 		String baseData = buff.get(df.peakDemand_Line);
 		String[] baseDataArray = baseData.split(",");
-		PeakElectricity ret = new PeakElectricity(PeakElectricityType.DEMAND, baseDataArray[1], baseDataArray[0]);
+		PeakDemand ret = new PeakDemand(baseDataArray[1], baseDataArray[0]);
 		return ret;
 	}
 	
@@ -144,7 +144,7 @@ public class ElectricUsageCSVParser {
 	 * ピーク時の予想最大電力供給を得る。
 	 * @return ピーク時の最大電力供給
 	 */
-	public PeakElectricity getPeakSupply () {
+	public PeakSupply getPeakSupply () {
 		if (buff == null)
 			try {
 				buff = readFromURL();
@@ -155,7 +155,7 @@ public class ElectricUsageCSVParser {
 			}
 		String baseData = buff.get(df.peakSupply_Line); //上から3行目に明記されている
 		String[] baseDataArray = baseData.split(",");
-		PeakElectricity ret = new PeakElectricity(PeakElectricityType.SUPPLY, baseDataArray[1], baseDataArray[0]);
+		PeakSupply ret = new PeakSupply(baseDataArray[1], baseDataArray[0]);
 		return ret;
 	}
 	
@@ -166,7 +166,7 @@ public class ElectricUsageCSVParser {
 	public Vector<HourlyDemand> getHourlyDemand () {
 		//九州電力に対する特例：九電は5分ごとのデータしか公開していない
 		if (df.hourlyDemand_Line == 0) {
-			return this.get5MinDemand();
+			return null;
 		}
 		
 		Vector<HourlyDemand> ret = new Vector<HourlyDemand>();
@@ -195,11 +195,11 @@ public class ElectricUsageCSVParser {
 	 * 5分ごとの需要実績データを得る。
 	 * @return 時間ごとの需要実績
 	 */
-	public Vector<HourlyDemand> get5MinDemand () {
-		if (!df.isNewFormat) {
+	public Vector<FiveMinDemand> get5MinDemand () {
+		if (df.fiveMinDemand_Line == 0) {
 			return null;
 		}
-		Vector<HourlyDemand> ret = new Vector<HourlyDemand>();
+		Vector<FiveMinDemand> ret = new Vector<FiveMinDemand>();
 		if (buff == null)
 			try {
 				buff = readFromURL();
@@ -222,8 +222,8 @@ public class ElectricUsageCSVParser {
 				demandStr = baseDataArray[2];
 			else
 				demandStr = "0";
-			HourlyDemand hd = new HourlyDemand(baseDataArray[0], baseDataArray[1], 
-					demandStr, diffStr, true);
+			FiveMinDemand hd = new FiveMinDemand(baseDataArray[0], baseDataArray[1], 
+					demandStr, diffStr);
 			ret.add(hd);
 		}
 		return ret;
@@ -254,7 +254,7 @@ public class ElectricUsageCSVParser {
 		//System.out.println(p.getReadText());
 		System.out.println("東北電力管内");
 		System.out.println(p.getPeakDemand().toString());
-		PeakElectricity pe = p.getPeakSupply();
+		PeakSupply pe = p.getPeakSupply();
 		System.out.println(pe.toString());
 		System.out.println(HourlyDemand.seekNearestHistory(p.get5MinDemand()).toStringWithDiffandPercentage(pe));
 		
@@ -262,7 +262,7 @@ public class ElectricUsageCSVParser {
 		ElectricUsageCSVParser pt = new ElectricUsageCSVParser(Format_Tokyo);
 		//System.out.println(pt.getReadText());
 		System.out.println(pt.getPeakDemand().toString());
-		PeakElectricity pet = pt.getPeakSupply();
+		PeakSupply pet = pt.getPeakSupply();
 		System.out.println(pet.toString());
 		System.out.println(HourlyDemand.seekNearestHistory(pt.get5MinDemand()).toStringWithDiffandPercentage(pet));
 		
@@ -270,7 +270,7 @@ public class ElectricUsageCSVParser {
 		ElectricUsageCSVParser pk = new ElectricUsageCSVParser(Format_Kansai);
 		//System.out.println(pt.getReadText());
 		System.out.println(pk.getPeakDemand().toString());
-		PeakElectricity pek = pk.getPeakSupply();
+		PeakSupply pek = pk.getPeakSupply();
 		System.out.println(pek.toString());
 		System.out.println(HourlyDemand.seekNearestHistory(pk.getHourlyDemand()).toStringWithDiffandPercentage(pek));
 		
@@ -278,7 +278,7 @@ public class ElectricUsageCSVParser {
 		ElectricUsageCSVParser pc = new ElectricUsageCSVParser(Format_Chubu);
 		//System.out.println(pt.getReadText());
 		System.out.println(pc.getPeakDemand().toString());
-		PeakElectricity pec = pc.getPeakSupply();
+		PeakSupply pec = pc.getPeakSupply();
 		System.out.println(pec.toString());
 		System.out.println(HourlyDemand.seekNearestHistory(pc.getHourlyDemand()).toStringWithDiffandPercentage(pec));
 		
@@ -286,7 +286,7 @@ public class ElectricUsageCSVParser {
 		ElectricUsageCSVParser ps = new ElectricUsageCSVParser(Format_Kyushu);
 		//System.out.println(pt.getReadText());
 		System.out.println(ps.getPeakDemand().toString());
-		PeakElectricity pes = ps.getPeakSupply();
+		PeakSupply pes = ps.getPeakSupply();
 		System.out.println(pes.toString());
 		System.out.println(HourlyDemand.seekNearestHistory(ps.getHourlyDemand()).toStringWithDiffandPercentage(pes));
 	}
