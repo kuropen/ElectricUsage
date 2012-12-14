@@ -37,5 +37,12 @@ public class PeakDemand extends ElecCSVHandler implements PeakElectricity {
 	public int getPeakAmount() {
 		return getAmount();
 	}
+	
+	@Override
+	public String toString() {
+		String ret = "最大電力需要は"+
+		this.getHour()+"時台において"+peakAmount+"万kWです。";
+		return ret;
+	}
 
 }

@@ -8,7 +8,7 @@ public class SupplyDataFormat {
 	/**
 	 * 供給データのURL
 	 */
-	public final String dataURL;
+	public String dataURL;
 	
 	/**
 	 * 供給データの文字コード
@@ -39,6 +39,11 @@ public class SupplyDataFormat {
 	 * 時間別需要の第4フィールドが予測である (東電のみtrue)
 	 */
 	public final boolean isNewFormat;
+	
+	/**
+	 * 北海道フラグ (Float型を取り扱う)
+	 */
+	public boolean isHokkaido = false;
 	
 	/**
 	 * データフォーマット変数の初期化
@@ -91,6 +96,13 @@ public class SupplyDataFormat {
 		charset = cs;
 		isNewFormat = false;
 		fiveMinDemand_Line = 0;
+	}
+	
+	/**
+	 * 北海道フラグを立てる
+	 */
+	public void setAsHokkaido() {
+		isHokkaido = true;
 	}
 		
 }

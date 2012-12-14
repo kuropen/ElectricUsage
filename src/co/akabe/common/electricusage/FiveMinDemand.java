@@ -34,19 +34,19 @@ public class FiveMinDemand extends HourlyDemand {
 		return this.getTime() + "の需要実績は" + getDemandToday() + "万kWでした。";
 	}
 	
-	@Override
-	public String toStringWithDiff() {
-		return toString() + appendDiff();
-	}
-	
-	@Override
-	public String toStringWithPercentage(PeakSupply pe) {
-		return toString() + appendPercentage(pe);
-	}
-	
-	@Override
-	public String toStringWithDiffandPercentage(PeakSupply pe) {
-		return toString() + appendDiff() + appendPercentage(pe);
-	}
+//	@Override
+//	public String toStringWithDiff() {
+//		return toString() + appendDiff();
+//	}
+//	
+//	@Override
+//	public String toStringWithPercentage(PeakSupply pe) {
+//		return toString() + appendPercentage(pe);
+//	}
+//	
+//	@Override
+//	public String toStringWithDiffandPercentage(PeakSupply pe) {
+//		return toString() + appendDiff() + appendPercentage(pe);
+//	}
 	
 }
