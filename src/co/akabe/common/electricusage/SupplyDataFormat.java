@@ -70,6 +70,7 @@ public class SupplyDataFormat {
 	 * @param pdl ピーク需要行
 	 * @param psl ピーク供給行
 	 * @param hdl 時間別需要行
+     * @deprecated 現在使われていない。というのも各社が細かい時間を区切った需要データを公開しており、そちらを優先して使っているため。
 	 */
 	public SupplyDataFormat (final String url, final int pdl, final int psl, final int hdl) {
 		dataURL = url;
@@ -87,7 +88,7 @@ public class SupplyDataFormat {
 	 * @param pdl ピーク需要行
 	 * @param psl ピーク供給行
 	 * @param hdl 時間別需要行
-	 * @param fivemin 5分ごと需要行
+	 * @param fivemin 短時間需要行
 	 */
 	public SupplyDataFormat (final String url, final int pdl, final int psl, final int hdl, final int fivemin) {
 		dataURL = url;
@@ -106,6 +107,7 @@ public class SupplyDataFormat {
 	 * @param psl ピーク供給行
 	 * @param hdl 時間別需要行
 	 * @param cs 文字コード
+     * @deprecated 現在使われていない。文字コードが統一されているため。
 	 */
 	public SupplyDataFormat (final String url, final int pdl, final int psl, final int hdl, final String cs) {
 		dataURL = url;
@@ -119,8 +121,8 @@ public class SupplyDataFormat {
 	
 	/**
 	 * 北海道フラグを立てる
+     * @deprecated 代わりに{@link co.akabe.common.electricusage.SupplyDataFormatH}クラスを使用すること。
 	 */
-	//TODO 別のコンストラクタで対応すべき。ElectricUsageCSVParserで無理な記述になっている。
 	public void setAsHokkaido() {
 		isHokkaido = true;
 	}
