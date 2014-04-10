@@ -125,6 +125,9 @@ public class HourlyDemand extends ElecCSVHandler {
      */
     public float getUsePercentage(PeakSupply s) {
         int peakSupply = s.getAmount();
+        if (peakSupply <= 0) {
+        	return 0;
+        }
         float ret = (float) td / peakSupply * 100;
         return ret;
     }
