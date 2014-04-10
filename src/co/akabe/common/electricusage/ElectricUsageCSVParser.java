@@ -109,7 +109,7 @@ public class ElectricUsageCSVParser {
      * 北陸電力のデータフォーマット定義
      */
     public static final SupplyDataFormat Format_Hokuriku =
-            new SupplyDataFormat("http://www.setsuden-rikuden.jp/csv/juyo-rikuden.csv", 5, 2, 8, 44);
+            new SupplyDataFormat("http://www.rikuden.co.jp/denki-yoho/csv/juyo-rikuden.csv", 5, 2, 8, 44);
 
     /**
      * 九州電力のデータフォーマット定義を作成する
@@ -134,7 +134,8 @@ public class ElectricUsageCSVParser {
      *
      * @param URL ソースURL ({@link #UsageDataURL_Tokyo}, {@link #UsageDataURL_Tohoku}の利用を推奨)
      */
-    public ElectricUsageCSVParser(String URL) {
+    @SuppressWarnings("deprecation")
+	public ElectricUsageCSVParser(String URL) {
         //this(URL, "Shift_JIS");
         df = new SupplyDataFormat(URL, 2, 5, 8);
         buff = null;
@@ -147,7 +148,8 @@ public class ElectricUsageCSVParser {
      * @param URL     ソースURL
      * @param charset 文字コード
      */
-    public ElectricUsageCSVParser(String URL, String charset) {
+    @SuppressWarnings("deprecation")
+	public ElectricUsageCSVParser(String URL, String charset) {
         //usageDataURL = URL;
         df = new SupplyDataFormat(URL, 2, 5, 8, charset);
         buff = null;
