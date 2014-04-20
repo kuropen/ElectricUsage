@@ -9,13 +9,10 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
-    <path id="JUnit 4.libraryclasspath">
-        <pathelement location="../../../../Applications/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar"/>
-        <pathelement location="../../../../Applications/eclipse/plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
-    </path>
     <path id="ElectricUsage.classpath">
         <pathelement location="bin"/>
-        <path refid="JUnit 4.libraryclasspath"/>
+        <pathelement location="lib/hamcrest-core-1.3.jar"/>
+        <pathelement location="lib/junit-4.11.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -52,19 +49,19 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
-    <target name="HourlyDemandTest">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <test name="co.akabe.common.electricusage.test.HourlyDemandTest" todir="${junit.output.dir}"/>
-            <classpath refid="ElectricUsage.classpath"/>
-        </junit>
-    </target>
     <target name="ElectricUsageCSVParserTest">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
             <test name="co.akabe.common.electricusage.test.ElectricUsageCSVParserTest" todir="${junit.output.dir}"/>
+            <classpath refid="ElectricUsage.classpath"/>
+        </junit>
+    </target>
+    <target name="HourlyDemandTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="co.akabe.common.electricusage.test.HourlyDemandTest" todir="${junit.output.dir}"/>
             <classpath refid="ElectricUsage.classpath"/>
         </junit>
     </target>
