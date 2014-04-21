@@ -120,7 +120,7 @@ public class HourlyDemand extends ElecCSVHandler {
     /**
      * ピーク供給に対する使用率を返す。
      *
-     * @param pe 使用率の算定基準となるピーク供給
+     * @param s 使用率の算定基準となるピーク供給
      * @return 使用率 (パーセント単位)
      */
     public float getUsePercentage(PeakSupply s) {
