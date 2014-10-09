@@ -1,5 +1,7 @@
 # Electricity Usage Parser Library
 
+[ ![Codeship Status for kuropen/ElectricUsage](https://www.codeship.io/projects/aaeba7f0-31d3-0132-635c-36278fb2817f/status)](https://www.codeship.io/projects/40190)
+
 各電力会社が公開している電力需要・供給状況のCSVファイルを解釈するためのJavaライブラリです。
 
 現在、CSVファイルを公開しているすべての電力会社に対応しています。
