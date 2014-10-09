@@ -2,11 +2,11 @@
 
 [ ![Codeship Status for kuropen/ElectricUsage](https://www.codeship.io/projects/aaeba7f0-31d3-0132-635c-36278fb2817f/status)](https://www.codeship.io/projects/40190)
 
-Electricity Usage Parser Library is a Java library to parse data about demand and supply in area of electric power companies in Japan.
+各電力会社が公開している電力需要・供給状況のCSVファイルを解釈するためのJavaライブラリです。
 
-Currently this library supports all over Japan except Okinawa prefecture (since Okinawa Electric Power Company does not disclose such data).
+現在、CSVファイルを公開しているすべての電力会社に対応しています。
 
-## License
+## ライセンス
 
 Copyright (C) 2011-2013 Kuropen.
 
@@ -23,4 +23,3 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with The Electricity Usage Parser Library.
 If not, see <http://www.gnu.org/licenses/>.
-
