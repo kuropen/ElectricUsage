@@ -20,7 +20,7 @@
 package co.akabe.common.electricusage;
 
 /**
- * 5分ごと需要を示すクラス。
+ * Five-minutes demand
  *
  * @author Hirochika Yuda, shinkai.sdpl@gmail.com
  */
@@ -35,7 +35,6 @@ public class FiveMinDemand extends HourlyDemand {
      */
     public FiveMinDemand(String d, String t, String dm) {
         super(d, t, dm, "-1048576");
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -48,27 +47,11 @@ public class FiveMinDemand extends HourlyDemand {
      */
     public FiveMinDemand(String d, String t, String dm, String y) {
         super(d, t, dm, y);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public String toString() {
         return this.getTime() + "の需要実績は" + getDemandToday() + "万kWでした。";
     }
-
-//	@Override
-//	public String toStringWithDiff() {
-//		return toString() + appendDiff();
-//	}
-//	
-//	@Override
-//	public String toStringWithPercentage(PeakSupply pe) {
-//		return toString() + appendPercentage(pe);
-//	}
-//	
-//	@Override
-//	public String toStringWithDiffandPercentage(PeakSupply pe) {
-//		return toString() + appendDiff() + appendPercentage(pe);
-//	}
 
 }
