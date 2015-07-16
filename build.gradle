@@ -1,9 +1,9 @@
 apply plugin: 'java'
- 
+
 repositories {
     mavenCentral()
 }
- 
+
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5'
     testCompile 'junit:junit:4.11'
@@ -22,5 +22,5 @@ sourceSets {
     }
 }
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.2.1'
 }

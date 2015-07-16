@@ -24,31 +24,31 @@ package co.akabe.common.electricusage;
  */
 public abstract class TimeAmountData {
 
-	/**
-	 * 時刻データ
-	 */
-	protected String time;
+    /**
+     * 時刻データ
+     */
+    protected String time;
 
-	private String[] getTimeArray() {
-		return time.split(":");
-	}
+    private String[] getTimeArray() {
+        return time.split(":");
+    }
 
-	/**
-	 * 時刻から「:00」を取り、数字だけを返す。
-	 * 
-	 * @return 日付データの時刻(n時台)
-	 */
-	public int getHour() {
-		int ret = Integer.parseInt(getTimeArray()[0]);
-		return ret;
-	}
+    /**
+     * 時刻から「:00」を取り、数字だけを返す。
+     *
+     * @return 日付データの時刻(n時台)
+     */
+    public int getHour() {
+        int ret = Integer.parseInt(getTimeArray()[0]);
+        return ret;
+    }
 
-	public int getMinute() {
-		int ret = Integer.parseInt(getTimeArray()[1]);
-		return ret;
-	}
-	
-	/**
+    public int getMinute() {
+        int ret = Integer.parseInt(getTimeArray()[1]);
+        return ret;
+    }
+
+    /**
      * 供給力の基準点となる時刻を返す。
      *
      * @return 時刻（文字列）
@@ -61,7 +61,7 @@ public abstract class TimeAmountData {
      * @return ピーク値(万kW)
      */
     public abstract int getAmount();
-    
+
     /**
      * ピーク値を示す。
      *
@@ -69,7 +69,7 @@ public abstract class TimeAmountData {
      * @deprecated Use {{@link #getAmount()} instead
      */
     public int getPeakAmount() {
-    	return getAmount();
+        return getAmount();
     }
 
 }

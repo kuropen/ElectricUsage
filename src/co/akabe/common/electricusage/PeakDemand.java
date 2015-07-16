@@ -24,48 +24,44 @@ package co.akabe.common.electricusage;
  */
 public class PeakDemand extends TimeAmountData {
 
-	private int peakAmount;
+    private int peakAmount;
 
-	/**
-	 * コンストラクタ
-	 * 
-	 * @param tm
-	 *            明記されているピーク時刻
-	 * @param am
-	 *            ピーク時電力量
-	 */
-	public PeakDemand(String tm, int am) {
-		time = tm;
-		peakAmount = am;
-	}
+    /**
+     * コンストラクタ
+     *
+     * @param tm 明記されているピーク時刻
+     * @param am ピーク時電力量
+     */
+    public PeakDemand(String tm, int am) {
+        time = tm;
+        peakAmount = am;
+    }
 
-	/**
-	 * コンストラクタ
-	 * 
-	 * @param tm
-	 *            明記されているピーク時刻
-	 * @param ams
-	 *            ピーク時電力量
-	 */
-	public PeakDemand(String tm, String ams) {
-		this(tm, Integer.parseInt(ams));
-	}
+    /**
+     * コンストラクタ
+     *
+     * @param tm  明記されているピーク時刻
+     * @param ams ピーク時電力量
+     */
+    public PeakDemand(String tm, String ams) {
+        this(tm, Integer.parseInt(ams));
+    }
 
-	@Override
-	public String getTime() {
-		return time;
-	}
+    @Override
+    public String getTime() {
+        return time;
+    }
 
-	@Override
-	public int getAmount() {
-		return peakAmount;
-	}
+    @Override
+    public int getAmount() {
+        return peakAmount;
+    }
 
-	@Override
-	public String toString() {
-		String ret = "最大電力需要は" + this.getHour() + "時台において" + peakAmount
-				+ "万kWです。";
-		return ret;
-	}
+    @Override
+    public String toString() {
+        String ret = "最大電力需要は" + this.getHour() + "時台において" + peakAmount
+                + "万kWです。";
+        return ret;
+    }
 
 }
