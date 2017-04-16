@@ -107,6 +107,7 @@ public class ElectricUsageCSVParser {
 
 	/**
 	 * 北陸電力のデータフォーマット定義
+	 * @deprecated 日付をまたぐとデータが取得できなくなってしまうため、 {@link #buildHokurikuFormat()}を使うこと。
 	 */
 	public static final SupplyDataFormat Format_Hokuriku = new SupplyDataFormat(
 			"http://www.rikuden.co.jp/denki-yoho/csv/juyo-rikuden.csv", 5, 2, 8, 44);
@@ -121,8 +122,23 @@ public class ElectricUsageCSVParser {
 				+ new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".csv", 5, 2, 8, 44);
 	}
 
+	/**
+	 * 東北電力のデータフォーマット定義を作成する
+	 *
+	 * @return 東北電力のデータフォーマット定義
+	 */
 	public static SupplyDataFormat buildTohokuFormat() {
 		return new SupplyDataFormat("http://setsuden.tohoku-epco.co.jp/common/demand/juyo_02_"
+				+ new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".csv", 5, 2, 8, 44);
+	}
+
+	/**
+	 * 北陸電力のデータフォーマット定義を作成する
+	 *
+	 * @return 北陸電力のデータフォーマット定義
+	 */
+	public static SupplyDataFormat buildHokurikuFormat() {
+		return new SupplyDataFormat("http://www.rikuden.co.jp/denki-yoho/csv/juyo_05_"
 				+ new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".csv", 5, 2, 8, 44);
 	}
 

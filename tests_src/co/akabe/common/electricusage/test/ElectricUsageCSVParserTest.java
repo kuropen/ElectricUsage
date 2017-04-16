@@ -23,7 +23,7 @@ public class ElectricUsageCSVParserTest extends TestCase {
                 ElectricUsageCSVParser.Format_Hokkaido,
                 ElectricUsageCSVParser.buildTohokuFormat(),
                 ElectricUsageCSVParser.Format_Tokyo,
-                ElectricUsageCSVParser.Format_Hokuriku,
+                ElectricUsageCSVParser.buildHokurikuFormat(),
                 ElectricUsageCSVParser.Format_Chubu,
                 ElectricUsageCSVParser.Format_Kansai,
                 ElectricUsageCSVParser.Format_Chugoku,
