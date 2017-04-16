@@ -104,7 +104,7 @@ public class ElectricUsageCSVParser {
 	 * 四国電力のデータフォーマット定義
 	 */
 	public static final SupplyDataFormat Format_Shikoku = new SupplyDataFormat(
-			"http://www.yonden.co.jp/denkiyoho/juyo_yonden.csv", 5, 2, 8, 40);
+			"http://www.yonden.co.jp/denkiyoho/juyo_shikoku.csv", 5, 2, 8, 40);
 
 	/**
 	 * 北陸電力のデータフォーマット定義
