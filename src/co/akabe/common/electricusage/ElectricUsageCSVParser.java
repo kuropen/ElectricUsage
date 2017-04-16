@@ -89,6 +89,7 @@ public class ElectricUsageCSVParser {
 
 	/**
 	 * 中国電力のデータフォーマット定義
+	 * @deprecated 日付をまたぐとデータが取得できなくなってしまうため、 {@link #buildChugokuFormat()}を使うこと。
 	 */
 	public static final SupplyDataFormat Format_Chugoku = new SupplyDataFormat(
 			"http://www.energia.co.jp/jukyuu/sys/juyo-j.csv", 5, 2, 8, 44);
@@ -139,6 +140,16 @@ public class ElectricUsageCSVParser {
 	 */
 	public static SupplyDataFormat buildHokurikuFormat() {
 		return new SupplyDataFormat("http://www.rikuden.co.jp/denki-yoho/csv/juyo_05_"
+				+ new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".csv", 5, 2, 8, 44);
+	}
+
+	/**
+	 * 中国電力のデータフォーマット定義を作成する
+	 *
+	 * @return 中国電力のデータフォーマット定義
+	 */
+	public static SupplyDataFormat buildChugokuFormat() {
+		return new SupplyDataFormat("http://www.energia.co.jp/jukyuu/sys/juyo_07_"
 				+ new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".csv", 5, 2, 8, 44);
 	}
 
